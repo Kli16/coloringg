@@ -4,103 +4,120 @@ from math import *
 from gmath import *
 
 def scanline_convert(polygons, i, screen, zbuffer ):
-    point = 0
-    while point < len(polygons) - 2:
-
-        normal = calculate_normal(polygons, point)[:]
-
-        if normal[2] > 0:
-            a = polygons[point][2]
-            b = polygons[point+1][2]
-            c = polygons[point+2][2]
-            if a > b:
-                if a > c:
-                    #a is the top
-                    topX = int(polygons[point][0])
-                    topY = int(polygons[point][1])
-                    topZ = a
-                    if b > c:
-                        #b is middle
-                        midX = int(polygons[point+1][0])
-                        midY = int(polygons[point+1][1])
-                        midZ = b
-                        #c is bottom
-                        btmX = int(polygons[point+2][0])
-                        btmY = int(polygons[point+2][1])
-                        btmZ = c
-                    else:
-                        #b is bottom
-                        btmX = int(polygons[point+1][0])
-                        btmY = int(polygons[point+1][1])
-                        btmZ = b
-                        #c is middle
-                        midX = int(polygons[point+2][0])
-                        midY = int(polygons[point+2][1])
-                        midZ = c
-                else:
-                    #c is the top
-                    topX = int(polygons[point+2][0])
-                    topY = int(polygons[point+2][1])
-                    topZ = c
-                    #a is the middle
-                    midX = int(polygons[point][0])
-                    midY = int(polygons[point][1])
-                    midZ = a
-                    #b is the bottom
-                    btmX = int(polygons[point+1][0])
-                    btmY = int(polygons[point+1][1])
-                    btmZ = b
+    color = [i*123456%255, i*987654%255, i*587233%255]
+    a = polygons[i][1]
+    b = polygons[i+1][1]
+    c = polygons[i+2][1]
+    if a > b:
+        if a > c:
+            #a is the top
+            topX = polygons[i][0]
+            topY = a
+            topZ = polygons[i][2]
+            if b > c:
+                #b is middle
+                midX = polygons[i+1][0]
+                midY = b
+                midZ = polygons[i+1][2]
+                #c is bottom
+                btmX = polygons[i+2][0]
+                btmY = c
+                btmZ = polygons[i+2][2]
             else:
-                if b > c:
-                    #b is the top
-                    topX = int(polygons[point+1][0])
-                    topY = int(polygons[point+1][1])
-                    topZ = b
-                    if a > c:
-                        #a is the middle
-                        midX = int(polygons[point][0])
-                        midY = int(polygons[point][1])
-                        midZ = a
-                        #c is the bottom
-                        btmX = int(polygons[point+2][0])
-                        btmY = int(polygons[point+2][1])
-                        btmZ = c
-                    else:
-                        #c is the middle
-                        midX = int(polygons[point+2][0])
-                        midY = int(polygons[point+2][1])
-                        midZ = c
-                        #a is the bottom
-                        btmX = int(polygons[point][0])
-                        btmY = int(polygons[point][1])
-                        btmZ = a
-                else:
-                    #c is the top
-                    topX = int(polygons[point+2][0])
-                    topY = int(polygons[point+2][1])
-                    topZ = c
-                    #b is the middle
-                    midX = int(polygons[point+1][0])
-                    midY = int(polygons[point+1][1])
-                    midZ = b
-                    #a is the bottom
-                    btmX = int(polygons[point][0])
-                    btmY = int(polygons[point][1])
-                    btmZ = a
-        x0 = btmX
-        x1 = btmX
-        for y in range(btmY, topY):
-            #setting delta0
-            delta0 = (topX - btmX) / topY - btmY)
-            #setting delta1
-            if y < midY:
-                delta1 = (midX - btmX) / (midY - btmY)
+                #b is bottom
+                btmX = polygons[i+1][0]
+                btmY = b
+                btmZ = polygons[i+1][2]
+                #c is middle
+                midX = polygons[i+2][0]
+                midY = c
+                midZ = polygons[i+2][2]
+        else:
+            #c is the top
+            topX = polygons[i+2][0]
+            topY = c
+            topZ = polygons[i+2][2]
+            #a is the middle
+            midX = polygons[i][0]
+            midY = a
+            midZ = polygons[i][2]
+            #b is the bottom
+            btmX = polygons[i+1][0]
+            btmY = b
+            btmZ = polygons[i+1][2]
+    else:
+        if b > c:
+            #b is the top
+            topX = polygons[i+1][0]
+            topY = b
+            topZ = polygons[i+1][2]
+            if a > c:
+                #a is the middle
+                midX = polygons[i][0]
+                midY = a
+                midZ = polygons[i][2]
+                #c is the bottom
+                btmX = polygons[i+2][0]
+                btmY = c
+                btmZ = polygons[i+2][2]
             else:
-                delta1 = (topX - midX) / (topY - midY)
-            drawline( x0, y, <insert some z thing idk>, x1, y, <insert some z thing>)
-            x0 += delta0
-            x1 += delta1
-        point+= 3
+                #c is the middle
+                midX = polygons[i+2][0]
+                midY = c
+                midZ = polygons[i+2][2]
+                #a is the bottom
+                btmX = polygons[i][0]
+                btmY = a
+                btmZ = polygons[i][2]
+        else:
+            #c is the top
+            topX = polygons[i+2][0]
+            topY = c
+            topZ = polygons[i+2][2]
+            #b is the middle
+            midX = polygons[i+1][0]
+            midY = b
+            midZ = polygons[i+1][2]
+            #a is the bottom
+            btmX = polygons[i][0]
+            btmY = a
+            btmZ = polygons[i][2]
+    x0 = btmX
+    x1 = btmX
+    z0 = btmZ
+    z1 = btmZ
+
+    y = btmY
+    while y < midY:
+        #setting delta0
+        deltax0 = (topX - btmX) / (topY - btmY)
+        deltaz0 = (topZ - btmZ) / (topY - btmY)
+        #setting delta1
+        deltax1 = (midX - btmX) / (midY - btmY)
+        deltaz1 = (midZ - btmZ) / (midY - btmY)
+        draw_line( int(x0), int(y), int(z0), int(x1), int(y), int(z1), screen, zbuffer, color)
+        x0 += deltax0
+        x1 += deltax1
+        z0 += deltaz0
+        z1 += deltaz1
+        y += 1
+
+    x1 = midX
+    y = midY
+    z1 = midZ
+    while y < topY:
+        #setting delta0
+        deltax0 = (topX - btmX) / (topY - btmY)
+        deltaz0 = (topZ - btmZ) / (topY - btmY)
+        #setting delta1
+        deltax1 = (topX - midX) / (topY - midY)
+        deltaz1 = (topZ - midZ) / (topY - midY)
+        draw_line( int(x0), int(y), int(z0), int(x1), int(y), int(z1), screen, zbuffer, color)
+        x0 += deltax0
+        x1 += deltax1
+        z0 += deltaz0
+        z1 += deltaz1
+        y += 1
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x0, y0, z0);
@@ -118,7 +135,7 @@ def draw_polygons( matrix, screen, zbuffer, color ):
         normal = calculate_normal(matrix, point)[:]
 
         if normal[2] > 0:
-            draw_line( int(matrix[point][0]),
+            '''draw_line( int(matrix[point][0]),
                        int(matrix[point][1]),
                        matrix[point][2],
                        int(matrix[point+1][0]),
@@ -138,9 +155,9 @@ def draw_polygons( matrix, screen, zbuffer, color ):
                        int(matrix[point+2][0]),
                        int(matrix[point+2][1]),
                        matrix[point+2][2],
-                       screen, zbuffer, color)
+                       screen, zbuffer, color)'''
+            scanline_convert(matrix, point, screen, zbuffer)
         point+= 3
-    scanline_convert(matrix, i, screen, zbuffer)
 
 def add_box( polygons, x, y, z, width, height, depth ):
     x1 = x + width
@@ -346,10 +363,13 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
     if x0 > x1:
         xt = x0
         yt = y0
+        zt = z0
         x0 = x1
         y0 = y1
+        z0 = z1
         x1 = xt
         y1 = yt
+        z1 = zt
 
     x = x0
     y = y0
@@ -393,8 +413,11 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             loop_start = y1
             loop_end = y
 
+    z = z0
+
+    temp = loop_start
     while ( loop_start < loop_end ):
-        plot( screen, zbuffer, color, x, y, 0 )
+        plot( screen, zbuffer, color, x, y, z )
         if ( (wide and ((A > 0 and d > 0) or (A < 0 and d < 0))) or
              (tall and ((A > 0 and d < 0) or (A < 0 and d > 0 )))):
 
@@ -406,4 +429,8 @@ def draw_line( x0, y0, z0, x1, y1, z1, screen, zbuffer, color ):
             y+= dy_east
             d+= d_east
         loop_start+= 1
-    plot( screen, zbuffer, color, x, y, 0 )
+
+        if (loop_end != temp):
+            z += (z1-z0)/(loop_end-temp)
+
+    plot( screen, zbuffer, color, x1, y1, z1 )
